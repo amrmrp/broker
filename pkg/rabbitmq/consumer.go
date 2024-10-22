@@ -1,0 +1,6 @@
+package rabbitmq
+
+func consume(){
+
+}
+
