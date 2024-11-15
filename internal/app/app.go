@@ -6,10 +6,15 @@ import (
 	"context"
 	"log"
 	"time"
-
+    "encoding/json"
 	"github.com/segmentio/kafka-go"
 )
 
+type MyMessage struct {
+    ID      string `json:"id"`
+    Command string `json:"command"`
+    Data    string `json:"data"`
+}
 // Start initializes the application
 func Start() {
 
@@ -22,11 +27,25 @@ func Start() {
 		log.Fatal("failed to dial leader:", err)
 	}
 
+    msg := MyMessage{
+        ID:      "12345",
+        Command: "create",
+        Data:    "Hello, Kafka!",
+    }
+
+    // Serialize the object to JSON
+    value, err := json.Marshal(msg)
+    if err != nil {
+        log.Fatalf("failed to serialize message: %v", err)
+    }
+
 	conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
 	_, err = conn.WriteMessages(
-		kafka.Message{Value: []byte("one!")},
-		kafka.Message{Value: []byte("two!")},
-		kafka.Message{Value: []byte("three!")},
+		kafka.Message{
+            Key: []byte("service.cmd.create"),
+            Value: value,
+        },
+	//	kafka.Message{Value: []byte("test")},
 	)
 	if err != nil {
 		log.Fatal("failed to write messages:", err)
