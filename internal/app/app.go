@@ -4,17 +4,24 @@ import (
 	//  "fmt"
 	//   "async-entity-fetcher/pkg/example"
 	"context"
+	"encoding/json"
 	"log"
 	"time"
-    "encoding/json"
 	"github.com/segmentio/kafka-go"
 )
+
+
+var data map[string]interface{}
+
 
 type MyMessage struct {
     ID      string `json:"id"`
     Command string `json:"command"`
-    Data    string `json:"data"`
+    Data    map[string]interface{} `json:"data"`
 }
+
+
+
 // Start initializes the application
 func Start() {
 
@@ -22,15 +29,23 @@ func Start() {
 	topic := "my-topic"
 	partition := 0
 
+    jsonData := `{"id": "12345", "command": "create", "data": {"field1": "value1", "field2": "value2"}}`
+
+
 	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
 	if err != nil {
 		log.Fatal("failed to dial leader:", err)
 	}
+     
+    err = json.Unmarshal([]byte(jsonData), &data)
+    if err != nil {
+        return
+    } 
 
     msg := MyMessage{
         ID:      "12345",
         Command: "create",
-        Data:    "Hello, Kafka!",
+        Data: data,
     }
 
     // Serialize the object to JSON
