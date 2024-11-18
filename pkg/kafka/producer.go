@@ -67,6 +67,5 @@ func CreateKafkaProducer(message map[string][]string, routeKey string, topic str
 		log.Fatal("failed to close writer:", err)
 	}
 
-	fmt.Println("Starting HelloWorld Application...")
 	log.Println("success produce 😊")
 }
