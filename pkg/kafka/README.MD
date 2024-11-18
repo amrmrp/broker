@@ -1,27 +1,54 @@
-### README: Kafka Producer Example with Dynamic Map Data
+### README: Kafka Producer and Consumer Example
 
 #### Overview
-This example demonstrates creating a Kafka producer in Go that dynamically sends messages using a map where keys represent entities, and values are slices of strings. The messages are published to a Kafka topic with specified routing.
+This example showcases dynamic Kafka message production and consumption using Go. Messages are generated dynamically from a map and consumed using a Kafka consumer.
 
-#### Steps
-1. **Initialize Map**: Keys (`entity1`, `entity2`, etc.) hold slices of values (e.g., `item1`, `item2`).
-2. **Kafka Producer Call**:
+---
+
+### **Producer**
+#### Steps:
+1. **Prepare Map**: Map keys represent entities, values are slices of strings.
+2. **Send Messages**:
    ```go
    kafka.CreateKafkaProducer(data, "invoice.cmd.created", "master-exchange", 0)
    ```
-   - `data`: Map containing entities and items.
-   - `invoice.cmd.created`: Kafka topic.
-   - `master-exchange`: Kafka exchange.
-   - `0`: Partition number.
+   - **Parameters**:
+     - `data`: Map with dynamic keys and values.
+     - `"invoice.cmd.created"`: Kafka topic.
+     - `"master-exchange"`: Exchange name.
+     - `0`: Partition.
 
-#### Example
+#### Example:
 ```go
-data := make(map[string][]string)
-data["entity1"] = []string{"item1", "item2", "item3"}
-data["entity2"] = []string{"item1", "item2", "item3"}
-data["entity3"] = []string{"item1", "item2", "item3"}
+data := map[string][]string{
+    "entity1": {"item1", "item2"},
+    "entity2": {"item3", "item4"},
+}
 
 kafka.CreateKafkaProducer(data, "invoice.cmd.created", "master-exchange", 0)
 ```
 
-This setup ensures dynamic publishing of multiple messages to Kafka topics.
+---
+
+### **Consumer**
+#### Steps:
+1. **Start Kafka Consumer**:
+   ```go
+   kafka.StartKafkaConsumer("master-exchange", 0)
+   ```
+   - **Parameters**:
+     - `"master-exchange"`: Name of the exchange.
+     - `0`: Partition.
+
+#### Example:
+```go
+kafka.StartKafkaConsumer("master-exchange", 0)
+```
+
+---
+
+### **Usage**
+- Produce messages using `CreateKafkaProducer`.
+- Consume messages dynamically using `StartKafkaConsumer`. 
+
+This architecture ensures seamless, scalable message handling in Kafka-based systems.
