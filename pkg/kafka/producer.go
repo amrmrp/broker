@@ -11,8 +11,6 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-type Data struct{}
-
 type MyMessage struct {
 	ID      string              `json:"id"`
 	Command string              `json:"command"`
