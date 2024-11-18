@@ -3,10 +3,8 @@ package kafka
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"time"
-
 	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
 )
