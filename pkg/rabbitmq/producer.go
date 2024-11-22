@@ -1,42 +1,39 @@
 package rabbitmq
 
 import (
-    "github.com/wagslane/go-rabbitmq"
-    "log"
+	"log"
+
+	"github.com/wagslane/go-rabbitmq"
 )
 
-// Producer ساختار تولیدکننده برای ارسال پیام‌ها
-type Producer struct {
-    publisher *rabbitmq.Publisher
-}
+func CreateRabbitProducer(message map[string][]string, routeKey string, topic string, partition int) {
+	conn, err := rabbitmq.NewConn(
+		"amqp://guest:guest@localhost",
+		rabbitmq.WithConnectionOptionsLogging,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
 
-// NewProducer یک تولیدکننده جدید ایجاد می‌کند
-func NewProducer(connString string) (*Producer, error) {
-    conn, err := rabbitmq.NewConn(connString, rabbitmq.WithConnectionOptionsLogging)
-    if err != nil {
-        return nil, err
-    }
+	publisher, err := rabbitmq.NewPublisher(
+		conn,
+		rabbitmq.WithPublisherOptionsLogging,
+		rabbitmq.WithPublisherOptionsExchangeName("events"),
+		rabbitmq.WithPublisherOptionsExchangeDeclare,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer publisher.Close()
 
-    publisher, err := rabbitmq.NewPublisher(conn, rabbitmq.WithPublisherOptionsLogging)
-    if err != nil {
-        return nil, err
-    }
-
-    return &Producer{publisher: publisher}, nil
-}
-
-// SendMessage پیام را به صف خاص ارسال می‌کند
-func (p *Producer) SendMessage(queue string, message string) error {
-    err := p.publisher.Publish(
-        []byte(message),
-        []string{queue},
-        rabbitmq.WithPublishOptionsContentType("text/plain"),
-        rabbitmq.WithPublishOptionsPersistentDelivery,
-    )
-    if err != nil {
-        log.Printf("خطا در ارسال پیام: %v", err)
-        return err
-    }
-    log.Printf("پیام ارسال شد: %s", message)
-    return nil
+	err = publisher.Publish(
+		[]byte("hello, world"),
+		[]string{"my_routing_key"},
+		rabbitmq.WithPublishOptionsContentType("application/json"),
+		rabbitmq.WithPublishOptionsExchange("events"),
+	)
+	if err != nil {
+		log.Println(err)
+	}
 }
