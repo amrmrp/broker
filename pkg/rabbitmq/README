@@ -1,0 +1,34 @@
+### README: RabbitMQ Producer Example
+
+#### Overview
+This demonstrates the dynamic creation of RabbitMQ messages from a map and routing them to a specific exchange.
+
+---
+
+### **Producer**
+#### Steps:
+1. **Prepare Data**:
+   - Create a map where keys represent entities, and values are slices of strings.
+
+2. **Send Messages**:
+   ```go
+   rabbitmq.CreateRabbitProducer(data, "invoice.cmd.created", "amq.topic")
+   ```
+   - **Parameters**:
+     - `data`: Map with dynamic keys and values.
+     - `"invoice.cmd.created"`: Routing key for the messages.
+     - `"amq.topic"`: Exchange name.
+
+---
+
+### **Example**:
+```go
+data := make(map[string][]string)
+data["entity1"] = []string{"item1", "item2", "item3"}
+data["entity2"] = []string{"item1", "item2", "item3"}
+data["entity3"] = []string{"item1", "item2", "item3"}
+
+rabbitmq.CreateRabbitProducer(data, "invoice.cmd.created", "amq.topic")
+```
+
+This will send each item's data to the RabbitMQ exchange `amq.topic` using the routing key `invoice.cmd.created`.
