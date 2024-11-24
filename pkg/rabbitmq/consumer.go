@@ -7,8 +7,9 @@ import (
 
 
 func NewRabbitConsumer(queueName string,routeKey string,exchangeName string) {
+
 	conn, err := rabbitmq.NewConn(
-		"amqp://guest:guest@localhost",
+		"amqp://admin:admin@localhost",
 		rabbitmq.WithConnectionOptionsLogging,
 	)
 	if err != nil {
@@ -16,11 +17,13 @@ func NewRabbitConsumer(queueName string,routeKey string,exchangeName string) {
 	}
 	defer conn.Close()
 	
+
 	consumer, err := rabbitmq.NewConsumer(
 		conn,
 		queueName,
 		rabbitmq.WithConsumerOptionsRoutingKey(routeKey),
 		rabbitmq.WithConsumerOptionsExchangeName(exchangeName),
+		rabbitmq.WithConsumerOptionsExchangeKind("topic"),
 		rabbitmq.WithConsumerOptionsExchangeDeclare,
 	)
 	if err != nil {
