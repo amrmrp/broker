@@ -1,7 +1,7 @@
-### README: RabbitMQ Producer Example
+### README: RabbitMQ Producer and Consumer Example
 
 #### Overview
-This demonstrates the dynamic creation of RabbitMQ messages from a map and routing them to a specific exchange.
+This demonstrates the dynamic creation of RabbitMQ messages and consumption using a producer-consumer model with `amq.topic` exchange.
 
 ---
 
@@ -19,9 +19,7 @@ This demonstrates the dynamic creation of RabbitMQ messages from a map and routi
      - `"invoice.cmd.created"`: Routing key for the messages.
      - `"amq.topic"`: Exchange name.
 
----
-
-### **Example**:
+#### Example:
 ```go
 data := make(map[string][]string)
 data["entity1"] = []string{"item1", "item2", "item3"}
@@ -31,4 +29,26 @@ data["entity3"] = []string{"item1", "item2", "item3"}
 rabbitmq.CreateRabbitProducer(data, "invoice.cmd.created", "amq.topic")
 ```
 
-This will send each item's data to the RabbitMQ exchange `amq.topic` using the routing key `invoice.cmd.created`.
+---
+
+### **Consumer**
+#### Steps:
+1. **Set Up Consumer**:
+   ```go
+   rabbitmq.NewRabbitConsumer("service1", "invoice.cmd.created", "amq.topic")
+   ```
+
+2. **Parameters**:
+   - `service1`: Consumer identifier.
+   - `invoice.cmd.created`: Routing key to filter messages.
+   - `amq.topic`: Exchange to consume from.
+
+#### Example:
+```go
+err := rabbitmq.NewRabbitConsumer("service1", "invoice.cmd.created", "amq.topic")
+if err != nil {
+    log.Fatalf("Failed to start consumer: %v", err)
+}
+```
+
+This setup allows your application to consume and process messages dynamically routed via the `amq.topic` exchange.
