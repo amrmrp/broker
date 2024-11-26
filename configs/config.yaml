@@ -1,11 +1,15 @@
 # configs/config.yaml
 
 rabbitmq:
-  url: "amqp://guest:guest@localhost:5672/"
-  queue: "my_queue"
-  routing_key: "my_routing_key"
-  exchange_name: "events"
-  exchange_type: "direct" # نوع تبادل مانند direct, topic, fanout و غیره
+  url: "amqp://admin:admin@localhost",
+  exchange:
+    name: "amq.topic"
+    type: "topic"
+  queue:
+    name: "my_queue"
+    routing_key: "invoice.cmd.created"
+
+
 
 kafka:
   brokers:
