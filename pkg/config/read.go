@@ -1,6 +1,6 @@
 package config
 
-func readConfig(){
-
+func readConfigs(){
+	
 	
 }
