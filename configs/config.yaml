@@ -1,16 +1,11 @@
-# configs/config.yaml
-
 rabbitmq:
-  url: "amqp://admin:admin@localhost",
+  url: "amqp://admin:admin@localhost"
   exchange:
     name: "amq.topic"
     type: "topic"
   queue:
     name: "my_queue"
     routing_key: "invoice.cmd.created"
-
-
-
 kafka:
   brokers:
     - "localhost:9092"
@@ -19,4 +14,3 @@ kafka:
 
 logger:
   level: "info" # سطح لاگ مانند debug, info, warn, error
- 
