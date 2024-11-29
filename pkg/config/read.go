@@ -27,6 +27,6 @@ func (config *Configs) SetConfigs(location string, structure interface{}) {
 }
 
 func (config *Configs) GetConfigs() {
-	// Access and print RabbitMQ URL
+	// Access and print interface
 	fmt.Printf("configs: %s\n", config)
 }
