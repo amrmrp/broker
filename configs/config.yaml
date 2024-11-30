@@ -5,7 +5,10 @@ rabbitmq:
     type: "topic"
   queue:
     name: "my_queue"
-    routing_key: "invoice.cmd.created"
+    routing_keys: 
+        - "invoice.cmd.created"
+        - "ticket.cmd.created"
+
 kafka:
   brokers:
     - "localhost:9092"

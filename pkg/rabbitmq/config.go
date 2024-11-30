@@ -10,8 +10,8 @@ type Config struct {
 			Type string `yaml:"type"`
 		} `yaml:"exchange"`
 		Queue struct {
-			Name       string `yaml:"name"`
-			RoutingKey string `yaml:"routing_key"`
+			Name         string `yaml:"name"`
+			RoutingKeys []string `yaml:"routing_keys"`
 		} `yaml:"queue"`
 	} `yaml:"rabbitmq"`
 }
