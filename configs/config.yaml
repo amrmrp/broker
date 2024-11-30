@@ -1,7 +1,7 @@
 rabbitmq:
   url: "amqp://admin:admin@localhost"
   exchange:
-    name: "amq.topic"
+    name: "master"
     type: "topic"
   queue:
     name: "my_queue"
