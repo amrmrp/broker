@@ -4,24 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"time"
-
 	"github.com/google/uuid"
 	"github.com/wagslane/go-rabbitmq"
 )
-
-type Config struct {
-	RabbitMQ struct {
-		URL      string `yaml:"url"`
-		Exchange struct {
-			Name string `yaml:"name"`
-			Type string `yaml:"type"`
-		} `yaml:"exchange"`
-		Queue struct {
-			Name       string `yaml:"name"`
-			RoutingKey string `yaml:"routing_key"`
-		} `yaml:"queue"`
-	} `yaml:"rabbitmq"`
-}
 
 type MyMessage struct {
 	ID      string              `json:"id"`
@@ -30,9 +15,14 @@ type MyMessage struct {
 	Time    time.Time           `json:"time"`
 }
 
-func CreateRabbitProducer(message map[string][]string, routeKey string, topic string) {
-	
+func CreateRabbitProducer(message map[string][]string, routeKey string) {
+	/*
+		-------------------------------------------------------------------------
+		| Initial config and new connection
+		-------------------------------------------------------------------------
+	*/
 	var config Config
+	config.GetRabbitConfig()
 
 	conn, err := rabbitmq.NewConn(
 		config.RabbitMQ.URL,
@@ -75,7 +65,7 @@ func CreateRabbitProducer(message map[string][]string, routeKey string, topic st
 		[]byte(messagesSerialize),
 		[]string{routeKey},
 		rabbitmq.WithPublishOptionsContentType("application/json"),
-		rabbitmq.WithPublishOptionsExchange(topic),
+		rabbitmq.WithPublishOptionsExchange(config.RabbitMQ.Exchange.Name),
 	)
 	if err != nil {
 		log.Println(err)
