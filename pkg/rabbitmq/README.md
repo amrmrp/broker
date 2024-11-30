@@ -26,7 +26,7 @@ data["entity1"] = []string{"item1", "item2", "item3"}
 data["entity2"] = []string{"item1", "item2", "item3"}
 data["entity3"] = []string{"item1", "item2", "item3"}
 
-rabbitmq.CreateRabbitProducer(data, "invoice.cmd.created", "amq.topic")
+rabbitmq.CreateRabbitProducer(data, "invoice.cmd.created")
 ```
 
 ---
