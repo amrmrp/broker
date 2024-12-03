@@ -4,21 +4,23 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/segmentio/kafka-go"
 )
 
-func StartKafkaConsumer(topic string,partition int) {
-	
+func StartKafkaConsumer(topic string, partition int) {
+
+	var config Config
+	config.GetConfig()
+
 	// to consume messages
-	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
+	conn, err := kafka.DialLeader(context.Background(), config.Kfka.PROTOCOL, config.Kfka.BROKERS[0], topic, partition)
 	if err != nil {
 		log.Fatal("failed to dial leader:", err)
 	}
 
-	conn.SetReadDeadline(time.Now().Add(10 * time.Second))
-	batch := conn.ReadBatch(10e3, 1e6) // fetch 10KB min, 1MB max
+	//conn.SetReadDeadline(time.Now().Add(10 * time.Second))
+	batch := conn.ReadBatch(1, 1e9) // fetch 10KB min, 1MB max
 
 	b := make([]byte, 200e3) // 200KB max per message
 	for {
