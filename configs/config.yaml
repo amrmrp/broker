@@ -5,15 +5,16 @@ rabbitmq:
     type: "topic"
   queue:
     name: "my_queue"
-    routing_keys: 
-        - "invoice.cmd.created"
-        - "ticket.cmd.created"
+    routing_keys:
+    - "invoice.cmd.created"
+    - "ticket.cmd.created"
 
 kafka:
   brokers:
-    - "localhost:9092"
+  - "localhost:9092"
   topic: "my_topic"
   group_id: "consumer-group-1"
+  protocol: "tcp"
 
 logger:
   level: "info" # سطح لاگ مانند debug, info, warn, error

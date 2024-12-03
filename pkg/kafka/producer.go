@@ -17,12 +17,15 @@ type MyMessage struct {
 }
 
 func CreateKafkaProducer(message map[string][]string, routeKey string, topic string, partition int) {
+
+	var config Config
+	config.GetConfig()
 	/*
 		-------------------------------------------------------------------------
 		| to produce messages and initial message structure
 		-------------------------------------------------------------------------
 	*/
-	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
+	conn, err := kafka.DialLeader(context.Background(), config.Kfka.PROTOCOL, config.Kfka.BROKERS[0], topic, partition)
 	if err != nil {
 		log.Fatal("failed to dial leader:", err)
 	}
@@ -49,7 +52,7 @@ func CreateKafkaProducer(message map[string][]string, routeKey string, topic str
 		| new connection and produce job
 		-------------------------------------------------------------------------
 	*/
-	conn.SetWriteDeadline(time.Now().Add(3 * time.Second))
+	conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
 	_, err = conn.WriteMessages(
 		kafka.Message{
 			Key:   []byte(routeKey),
