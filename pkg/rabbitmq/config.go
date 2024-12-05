@@ -10,14 +10,14 @@ type Config struct {
 			Type string `yaml:"type"`
 		} `yaml:"exchange"`
 		Queue struct {
-			Name         string `yaml:"name"`
+			Name        string   `yaml:"name"`
 			RoutingKeys []string `yaml:"routing_keys"`
 		} `yaml:"queue"`
 	} `yaml:"rabbitmq"`
 }
 
-func(configs *Config) GetRabbitConfig(){
+func (configs *Config) GetRabbitConfig() {
 	var configStruct = configs
 	var configHandler config.Configs
-	configHandler.SetConfigs("./../../configs/config.yaml", &configStruct)
+	configHandler.SetConfigs("./../../configs/connection-config.yaml", &configStruct)
 }

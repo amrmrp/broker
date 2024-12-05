@@ -14,5 +14,5 @@ type Config struct {
 func(configs *Config) GetConfig(){
 	var configStruct = configs
 	var configHandler config.Configs
-	configHandler.SetConfigs("./../../configs/config.yaml", &configStruct)
+	configHandler.SetConfigs("./../../configs/connection-config.yaml", &configStruct)
 }
