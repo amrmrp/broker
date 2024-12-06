@@ -5,15 +5,12 @@ import (
 	"github.com/wagslane/go-rabbitmq"
 )
 
-func NewRabbitConsumer(queueName string, routeKey string) {
+func Consume(queueName string, routeKey string) {
 	/*
 		-------------------------------------------------------------------------
 		| Initial config and new connection
 		-------------------------------------------------------------------------
 	*/
-	var config Config
-	config.GetRabbitConfig()
-
 	conn, err := rabbitmq.NewConn(
 		config.RabbitMQ.URL,
 		rabbitmq.WithConnectionOptionsLogging,

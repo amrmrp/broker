@@ -8,10 +8,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func StartKafkaConsumer(topic string, partition int) {
-
-	var config Config
-	config.GetConfig()
+func Consume(topic string, partition int) {
 
 	// to consume messages
 	conn, err := kafka.DialLeader(context.Background(), config.Kfka.PROTOCOL, config.Kfka.BROKERS[0], topic, partition)

@@ -15,14 +15,12 @@ type MyMessage struct {
 	Time    time.Time           `json:"time"`
 }
 
-func CreateRabbitProducer(message map[string][]string, routeKey string) {
+func Produce(message map[string][]string, routeKey string) {
 	/*
 		-------------------------------------------------------------------------
 		| Initial config and new connection
 		-------------------------------------------------------------------------
 	*/
-	var config Config
-	config.GetRabbitConfig()
 
 	conn, err := rabbitmq.NewConn(
 		config.RabbitMQ.URL,

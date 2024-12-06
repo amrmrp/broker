@@ -16,10 +16,8 @@ type MyMessage struct {
 	Time    time.Time           `json:"time"`
 }
 
-func CreateKafkaProducer(message map[string][]string, routeKey string, topic string, partition int) {
+func Produce(message map[string][]string, routeKey string, topic string, partition int) {
 
-	var config Config
-	config.GetConfig()
 	/*
 		-------------------------------------------------------------------------
 		| to produce messages and initial message structure
