@@ -6,22 +6,12 @@ import (
 	"fmt"
 	"log"
 	"time"
-
 	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
 )
 
 type Kafka struct {
 	Data interface{}
-}
-
-type Config struct {
-	Kafka struct {
-		BROKERS  []string `yaml:"brokers"`
-		TOPIC    string   `yaml:"topic"`
-		GROUP_ID string   `yaml:"group_id"`
-		PROTOCOL string   `yaml:"protocol"`
-	} `yaml:"kafka"`
 }
 
 type Message struct {
@@ -31,9 +21,8 @@ type Message struct {
 	Time    time.Time           `json:"time"`
 }
 
-func NewKafka(brokers []string, topic string) *Kafka {
+func NewKafka(config *Kafka) *Kafka {
 
-	var config *Config
 	return &Kafka{config}
 }
 
