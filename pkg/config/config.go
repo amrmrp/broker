@@ -1,7 +1,7 @@
 package config
 
 type KafkaConfig struct {
-	Kafka struct {
+	Read struct {
 		BROKERS  []string `yaml:"brokers"`
 		TOPIC    string   `yaml:"topic"`
 		GROUP_ID string   `yaml:"group_id"`
@@ -10,7 +10,7 @@ type KafkaConfig struct {
 }
 
 type RabbitMQConfig struct {
-	RabbitMQ struct {
+	Read struct {
 		URL      string `yaml:"url"`
 		Exchange struct {
 			Name string `yaml:"name"`
