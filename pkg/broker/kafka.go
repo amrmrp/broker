@@ -1,35 +1,37 @@
 package broker
 
 import (
+	"async-entity-fetcher/pkg/config"
 	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"time"
+
 	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
 )
 
 type Kafka struct {
-	Data interface{}
+	config  *config.KafkaConfig
 }
 
-type Message struct {
+type KafkaMessage struct {
 	ID      string              `json:"id"`
 	Command string              `json:"command"`
 	Data    map[string][]string `json:"data"`
 	Time    time.Time           `json:"time"`
 }
 
-func NewKafka(config *Kafka) *Kafka {
+func NewKafka(config  *config.KafkaConfig) *Kafka {
 
-	return &Kafka{config}
+	return &Kafka{config :config}
 }
 
 func (kafkaInterface *Kafka) Consume(topic string, partition int) {
 
 	// to consume messages
-	conn, err := kafka.DialLeader(context.Background(), kafkaInterface.PROTOCOL, kafkaInterface.BROKERS[0], topic, partition)
+	conn, err := kafka.DialLeader(context.Background(), kafkaInterface.config.Read.PROTOCOL, kafkaInterface.config.Read.BROKERS[0], topic, partition)
 	if err != nil {
 		log.Fatal("failed to dial leader:", err)
 	}
@@ -56,18 +58,17 @@ func (kafkaInterface *Kafka) Consume(topic string, partition int) {
 }
 
 func (kafkaInterface *Kafka) Produce(message map[string][]string, routeKey string, topic string, partition int) {
-
 	/*
 		-------------------------------------------------------------------------
 		| to produce messages and initial message structure
 		-------------------------------------------------------------------------
 	*/
-	conn, err := kafka.DialLeader(context.Background(), kafkaInterface.PROTOCOL, kafkaInterface.BROKERS[0], topic, partition)
+	conn, err := kafka.DialLeader(context.Background(), kafkaInterface.config.Read.PROTOCOL, kafkaInterface.config.Read.BROKERS[0], topic, partition)
 	if err != nil {
 		log.Fatal("failed to dial leader:", err)
 	}
 
-	messages := Message{
+	messages := KafkaMessage{
 		ID:      uuid.New().String(),
 		Command: routeKey,
 		Data:    message,
