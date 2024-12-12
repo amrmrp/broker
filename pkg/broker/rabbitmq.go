@@ -1,28 +1,29 @@
 package broker
 
 import (
+	"async-entity-fetcher/pkg/config"
 	"encoding/json"
 	"log"
 	"time"
+
 	"github.com/google/uuid"
 	"github.com/wagslane/go-rabbitmq"
 )
 
 type RabbitMQ struct {
-	Data interface{}
+	config *config.RabbitMQConfig
 }
 
-type Message struct {
+type MessageRabbitMQ struct {
 	ID      string              `json:"id"`
 	Command string              `json:"command"`
 	Data    map[string][]string `json:"data"`
 	Time    time.Time           `json:"time"`
 }
 
+func NewRabbitMQ(config *config.RabbitMQConfig) *RabbitMQ{
 
-func NewRabbitMQ(config *RabbitMQ) *RabbitMQ{
-
-	return &RabbitMQ{config}
+	return &RabbitMQ{config: config}
 
 }
 
@@ -32,9 +33,8 @@ func (rabbitmqInterface *RabbitMQ) Produce(message map[string][]string, routeKey
 		| Initial config and new connection
 		-------------------------------------------------------------------------
 	*/
-
 	conn, err := rabbitmq.NewConn(
-		rabbitmqInterface.URL,
+		rabbitmqInterface.config.Read.URL,
 		rabbitmq.WithConnectionOptionsLogging,
 	)
 	if err != nil {
@@ -42,7 +42,7 @@ func (rabbitmqInterface *RabbitMQ) Produce(message map[string][]string, routeKey
 	}
 	defer conn.Close()
 
-	messages := Message{
+	messages := MessageRabbitMQ{
 		ID:      uuid.New().String(),
 		Command: routeKey,
 		Data:    message,
@@ -62,7 +62,7 @@ func (rabbitmqInterface *RabbitMQ) Produce(message map[string][]string, routeKey
 	publisher, err := rabbitmq.NewPublisher(
 		conn,
 		rabbitmq.WithPublisherOptionsLogging,
-		rabbitmq.WithPublisherOptionsExchangeName(rabbitmqInterface.Exchange.Name),
+		rabbitmq.WithPublisherOptionsExchangeName(rabbitmqInterface.config.Read.Exchange.Name),
 		rabbitmq.WithPublisherOptionsExchangeDeclare,
 	)
 	if err != nil {
@@ -74,7 +74,7 @@ func (rabbitmqInterface *RabbitMQ) Produce(message map[string][]string, routeKey
 		[]byte(messagesSerialize),
 		[]string{routeKey},
 		rabbitmq.WithPublishOptionsContentType("application/json"),
-		rabbitmq.WithPublishOptionsExchange(rabbitmqInterface.Exchange.Name),
+		rabbitmq.WithPublishOptionsExchange(rabbitmqInterface.config.Read.Exchange.Name),
 	)
 	if err != nil {
 		log.Println(err)
@@ -90,7 +90,7 @@ func (rabbitmqInterface *RabbitMQ) Consume(queueName string, routeKey string) {
 		-------------------------------------------------------------------------
 	*/
 	conn, err := rabbitmq.NewConn(
-		rabbitmqInterface.URL,
+		rabbitmqInterface.config.Read.URL,
 		rabbitmq.WithConnectionOptionsLogging,
 	)
 	if err != nil {
@@ -102,8 +102,8 @@ func (rabbitmqInterface *RabbitMQ) Consume(queueName string, routeKey string) {
 		conn,
 		queueName,
 		rabbitmq.WithConsumerOptionsRoutingKey(routeKey),
-		rabbitmq.WithConsumerOptionsExchangeName(rabbitmqInterface.Exchange.Name),
-		rabbitmq.WithConsumerOptionsExchangeKind(rabbitmqInterface.Exchange.Type),
+		rabbitmq.WithConsumerOptionsExchangeName(rabbitmqInterface.config.Read.Exchange.Name),
+		rabbitmq.WithConsumerOptionsExchangeKind(rabbitmqInterface.config.Read.Exchange.Type),
 		rabbitmq.WithConsumerOptionsExchangeDeclare,
 	)
 	if err != nil {
