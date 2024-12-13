@@ -1,6 +1,6 @@
 
 
-# async-entity-fetcher
+# broker
 
 **async-entity-fetcher** is a Go package designed to asynchronously fetch and populate entities from secondary services through message queues like Kafka, RabbitMQ, etc. It helps microservices retrieve data in a non-blocking way and ensures efficient entity loading when required.
 
