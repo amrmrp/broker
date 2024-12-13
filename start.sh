@@ -1,1 +1,0 @@
-go run cmd/async-entity-fetcher/main.go
