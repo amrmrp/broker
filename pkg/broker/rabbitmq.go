@@ -1,11 +1,10 @@
 package broker
 
 import (
-	"async-entity-fetcher/pkg/config"
+	"broker/pkg/config"
 	"encoding/json"
 	"log"
 	"time"
-
 	"github.com/google/uuid"
 	"github.com/wagslane/go-rabbitmq"
 )

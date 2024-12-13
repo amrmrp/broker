@@ -1,4 +1,4 @@
-module async-entity-fetcher
+module broker
 
 go 1.23.1
 

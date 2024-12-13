@@ -1,13 +1,12 @@
 package broker
 
 import (
-	"async-entity-fetcher/pkg/config"
+	"broker/pkg/config"
 	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"time"
-
 	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
 )
