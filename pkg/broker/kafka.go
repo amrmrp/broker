@@ -1,7 +1,7 @@
 package broker
 
 import (
-	"broker/pkg/config"
+	"github.com/amrmrp/broker/pkg/config"
 	"context"
 	"encoding/json"
 	"fmt"

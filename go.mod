@@ -1,4 +1,4 @@
-module broker
+module github.com/amrmrp/broker
 
 go 1.23.1
 
