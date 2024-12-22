@@ -4,13 +4,17 @@ import (
 	"log"
 	"os"
 
+	"github.com/amrmrp/broker/pkg/errors"
 	"gopkg.in/yaml.v3"
 )
+
+
 
 func LoadConfig(path string) (*Configs, error) {
 	file, err := os.ReadFile(path)
 	if err != nil {
-		return nil, err
+
+		errors.Mssage("I couldn't read the config file.").Error()
 	}
 
 	var config Configs
