@@ -1,10 +1,11 @@
 package broker
 
 import (
-	"github.com/amrmrp/broker/pkg/config"
 	"encoding/json"
 	"log"
 	"time"
+    "github.com/amrmrp/broker/pkg/errors"
+	"github.com/amrmrp/broker/pkg/config"
 	"github.com/google/uuid"
 	"github.com/wagslane/go-rabbitmq"
 )
@@ -20,7 +21,7 @@ type MessageRabbitMQ struct {
 	Time    time.Time           `json:"time"`
 }
 
-func NewRabbitMQ(config *config.RabbitMQConfig) *RabbitMQ{
+func NewRabbitMQ(config *config.RabbitMQConfig) *RabbitMQ {
 
 	return &RabbitMQ{config: config}
 
@@ -37,7 +38,8 @@ func (rabbitmqInterface *RabbitMQ) Produce(message map[string][]string, routeKey
 		rabbitmq.WithConnectionOptionsLogging,
 	)
 	if err != nil {
-		log.Fatal(err)
+
+		errors.Mssage("rabbitMQ connection failed.").Error()
 	}
 	defer conn.Close()
 
@@ -55,7 +57,7 @@ func (rabbitmqInterface *RabbitMQ) Produce(message map[string][]string, routeKey
 	*/
 	messagesSerialize, err := json.Marshal(messages)
 	if err != nil {
-		log.Fatalf("failed to serialize message: %v", err)
+		errors.Mssage("rabbit marshal message failed.").Error()
 	}
 
 	publisher, err := rabbitmq.NewPublisher(
@@ -76,11 +78,9 @@ func (rabbitmqInterface *RabbitMQ) Produce(message map[string][]string, routeKey
 		rabbitmq.WithPublishOptionsExchange(rabbitmqInterface.config.Read.Exchange.Name),
 	)
 	if err != nil {
-		log.Println(err)
+		errors.Mssage("rabbit publish message failed.").Error()
 	}
 }
-
-
 
 func (rabbitmqInterface *RabbitMQ) Consume(queueName string, routeKey string) {
 	/*
