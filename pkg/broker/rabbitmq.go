@@ -106,6 +106,7 @@ func (rabbitmqInterface *RabbitMQ) Consume(queueName string, routeKey string) {
 		rabbitmq.WithConsumerOptionsExchangeDeclare,
 	)
 	if err != nil {
+		errors.Mssage("rabbitMQ connection failed.").Error()
 		log.Fatal(err)
 	}
 	defer consumer.Close()
@@ -116,6 +117,6 @@ func (rabbitmqInterface *RabbitMQ) Consume(queueName string, routeKey string) {
 		return rabbitmq.Ack
 	})
 	if err != nil {
-		log.Fatal(err)
+		errors.Mssage("rabbitMQ consume error.").Error()	
 	}
 }
