@@ -9,6 +9,7 @@ import (
 	"time"
 	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
+	"github.com/amrmrp/broker/pkg/errors"
 )
 
 type Kafka struct {
@@ -64,7 +65,7 @@ func (kafkaInterface *Kafka) Produce(message map[string][]string, routeKey strin
 	*/
 	conn, err := kafka.DialLeader(context.Background(), kafkaInterface.config.Read.PROTOCOL, kafkaInterface.config.Read.BROKERS[0], topic, partition)
 	if err != nil {
-		log.Fatal("failed to dial leader:", err)
+		errors.Mssage("failed to dial leader").Error()
 	}
 
 	messages := KafkaMessage{
@@ -81,7 +82,7 @@ func (kafkaInterface *Kafka) Produce(message map[string][]string, routeKey strin
 	*/
 	messagesSerialize, err := json.Marshal(messages)
 	if err != nil {
-		log.Fatalf("failed to serialize message: %v", err)
+		errors.Mssage("failed to serialize message").Error()
 	}
 
 	/*
@@ -98,11 +99,11 @@ func (kafkaInterface *Kafka) Produce(message map[string][]string, routeKey strin
 	)
 
 	if err != nil {
-		log.Fatal("failed to write messages:", err)
+		errors.Mssage("failed to produce messages").Error()
 	}
 
 	if err := conn.Close(); err != nil {
-		log.Fatal("failed to close writer:", err)
+		errors.Mssage("failed to produce connection").Error()
 	}
 
 	log.Println("success produce 😊")
