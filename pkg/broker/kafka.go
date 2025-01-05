@@ -33,7 +33,7 @@ func (kafkaInterface *Kafka) Consume(topic string, partition int) {
 	// to consume messages
 	conn, err := kafka.DialLeader(context.Background(), kafkaInterface.config.Read.PROTOCOL, kafkaInterface.config.Read.BROKERS[0], topic, partition)
 	if err != nil {
-		log.Fatal("failed to dial leader:", err)
+		errors.Mssage("failed to dial leader.").Error()
 	}
 
 	//conn.SetReadDeadline(time.Now().Add(10 * time.Second))
@@ -49,11 +49,11 @@ func (kafkaInterface *Kafka) Consume(topic string, partition int) {
 	}
 
 	if err := batch.Close(); err != nil {
-		log.Fatal("failed to close batch:", err)
+		errors.Mssage("failed to close batch.").Error()
 	}
 
 	if err := conn.Close(); err != nil {
-		log.Fatal("failed to close connection:", err)
+		errors.Mssage("failed to close connection.").Error()
 	}
 }
 
@@ -65,7 +65,7 @@ func (kafkaInterface *Kafka) Produce(message map[string][]string, routeKey strin
 	*/
 	conn, err := kafka.DialLeader(context.Background(), kafkaInterface.config.Read.PROTOCOL, kafkaInterface.config.Read.BROKERS[0], topic, partition)
 	if err != nil {
-		errors.Mssage("failed to dial leader").Error()
+		errors.Mssage("failed to dial leader.").Error()
 	}
 
 	messages := KafkaMessage{
@@ -82,7 +82,7 @@ func (kafkaInterface *Kafka) Produce(message map[string][]string, routeKey strin
 	*/
 	messagesSerialize, err := json.Marshal(messages)
 	if err != nil {
-		errors.Mssage("failed to serialize message").Error()
+		errors.Mssage("failed to serialize message.").Error()
 	}
 
 	/*
@@ -99,11 +99,11 @@ func (kafkaInterface *Kafka) Produce(message map[string][]string, routeKey strin
 	)
 
 	if err != nil {
-		errors.Mssage("failed to produce messages").Error()
+		errors.Mssage("failed to produce messages.").Error()
 	}
 
 	if err := conn.Close(); err != nil {
-		errors.Mssage("failed to produce connection").Error()
+		errors.Mssage("failed to produce connection.").Error()
 	}
 
 	log.Println("success produce 😊")
