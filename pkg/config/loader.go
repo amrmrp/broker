@@ -1,14 +1,10 @@
 package config
 
 import (
-	"log"
 	"os"
-
 	"github.com/amrmrp/broker/pkg/errors"
 	"gopkg.in/yaml.v3"
 )
-
-
 
 func LoadConfig(path string) (*Configs, error) {
 	file, err := os.ReadFile(path)
@@ -26,7 +22,7 @@ func LoadConfig(path string) (*Configs, error) {
 	for name, target := range configMap {
 		err = yaml.Unmarshal(file, target)
 		if err != nil {
-			log.Fatalf("Error unmarshaling %s config: %v", name, err)
+			errors.Mssage("Error unmarshaling config:" + name).Error()	
 		}
 	}
 
